@@ -14,9 +14,12 @@ class Member(models.Model):
     is_active = models.BooleanField(default=False)
     organization = models.ForeignKey("organization.Organization",on_delete=models.CASCADE,related_name="member")
     role = models.ForeignKey("organization.Role",on_delete=models.CASCADE,related_name="member")
+    otp = models.IntegerField(null=True,blank=True)
+    invitation_code = models.CharField(max_length=7,null=True,blank=True)
     profile_image = models.ImageField(
         upload_to="media/members/profile_images/", blank=True, null=True
     )
+    is_invited = models.BooleanField(default=True)
     
     class Meta:
         """meta data"""

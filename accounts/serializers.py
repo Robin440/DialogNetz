@@ -15,3 +15,17 @@ class UserSerializers(serializers.ModelSerializer):
         """
         model = User
         exclude = ['password']
+
+
+class UserValidationSerializers(serializers.ModelSerializer):
+    """
+    User serializer
+
+    """
+    class Meta:
+        """
+        meta data
+        """
+        model = User
+        exclude = ['password']
+

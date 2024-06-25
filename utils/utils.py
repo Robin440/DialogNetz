@@ -3,6 +3,10 @@ from organization.models import Organization
 from utils.responses import *
 from member.models import Member
 
+import random
+import string
+
+
 
 def get_user_organization(user):
     """
@@ -48,3 +52,11 @@ def is_admin(member):
     if member.role.name == "Admin":
         return True
     return False
+
+
+
+def generate_unique_code(length=6):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def generate_otp(length=6):
+    return ''.join(random.choices(string.digits, k=length))

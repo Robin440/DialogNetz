@@ -18,3 +18,17 @@ class MemberSerializer(serializers.ModelSerializer):
         """
         model = Member
         fields = "__all__"
+
+
+class MemberValidationSerializer(serializers.ModelSerializer):
+    """
+    Member validation serializers
+
+    """
+
+    class Meta:
+        """
+        Meta class for MemberValidationSerializer
+        """
+        model = Member
+        fields = "__all__"
