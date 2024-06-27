@@ -9,6 +9,9 @@ from accounts.models import User
 from utils.responses import *
 from django.contrib.auth import authenticate, logout, login
 from member.models import Member
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 
 
 class LoginAPI(APIView):
@@ -16,6 +19,50 @@ class LoginAPI(APIView):
     Handle api for login
 
     """
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["username", "password"],
+            properties={
+                "username": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Username of the user.",
+                ),
+                "password": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Password of the user.",
+                ),
+              
+            },
+        ),
+        response_schema={
+            "200": openapi.Response(
+                description="API returns success message.",
+                examples={
+                    "application/json": {
+                        "message": [],
+                        "status": "success",
+                    }
+                },
+            ),
+            "400": openapi.Response(
+                description="Data required or Integrity errors.",
+                examples={
+                    "application/json": {
+                        "error": {
+                            "username": [],
+                            "email": [],
+                            "user": [],
+                            "member": [],
+                            "non_field_error": [],
+                        },
+                        "status": "failed",
+                    }
+                },
+            ),
+        },
+    )
     def post(self,request,*args,**kwargs):
         """
         # Handle post request for login.
@@ -66,9 +113,11 @@ class LoginAPI(APIView):
         user = authenticate(request=request,username=username,password=password)
 
         if not user:
-            return HTTP_401(error={"username or password":["Invalid username or password"]})
+            return HTTP_401(error={"non_binary_error":["Invalid username or password"]})
         
         login(request,user)
+
+        print (f"user +++++++++++++++++++++++++++++++++++ {user}")
         return HTTP_200(message={"message":"Logged in successfully"})
         
 
@@ -79,7 +128,50 @@ class OTPVerifyMemberAPI(APIView):
     Verify a member using token sent via email.
 
     """
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["email", "otp"],
+            properties={
+                "email": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="email of the user.",
+                ),
+                "otp": openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description="OTP which has send to the user's mail.",
+                ),
+              
+            },
+        ),
+        response_schema={
+            "200": openapi.Response(
+                description="API returns success message.",
+                examples={
+                    "application/json": {
+                        "message": [],
+                        "status": "success",
+                    }
+                },
+            ),
+            "400": openapi.Response(
+                description="Data required or Integrity errors.",
+                examples={
+                    "application/json": {
+                        "error": {
+                            "username": [],
+                            "email": [],
+                            "user": [],
+                            "member": [],
+                            "otp":[],
+                            "non_field_error": [],
+                        },
+                        "status": "failed",
+                    }
+                },
+            ),
+        },
+    )
     def post(self,request,*args,**kwargs):
         """
         # Handle POST request to verify otp.
@@ -125,5 +217,11 @@ class OTPVerifyMemberAPI(APIView):
             return HTTP_200({"message": "OTP verified successfully"})
         
         return HTTP_400(error={"otp":["Invalid OTP or incorrect otp"]})
-            
-        
+
+
+
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
+
+def csrf_token(request):
+    return JsonResponse({'csrfToken': get_token(request)})

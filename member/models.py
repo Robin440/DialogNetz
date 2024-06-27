@@ -20,6 +20,7 @@ class Member(models.Model):
         upload_to="media/members/profile_images/", blank=True, null=True
     )
     is_invited = models.BooleanField(default=True)
+    connections = models.ManyToManyField("self", symmetrical=False, blank=True)
     
     class Meta:
         """meta data"""
@@ -30,3 +31,27 @@ class Member(models.Model):
 
     def __str__(self) -> str:
         return self.user.username
+    
+
+
+
+
+from django.db import models
+from django.utils import timezone
+import uuid
+
+class Message(models.Model):
+    """Message model to store chat messages between members"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(Member, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(Member, related_name='received_messages', on_delete=models.CASCADE)
+    content = models.TextField(blank=True, null=True)
+    media = models.FileField(upload_to='media/messages/', blank=True, null=True)
+    timestamp = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"{self.sender.name} to {self.receiver.name}: {self.content[:50]}"

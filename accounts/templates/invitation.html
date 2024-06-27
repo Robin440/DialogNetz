@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invitation to Join DialogNetz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .header img {
+            max-width: 150px;
+            height: auto;
+        }
+        .header h1 {
+            color: #5b9bd5;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .content p {
+            line-height: 1.6;
+        }
+        .content a {
+            color: #5b9bd5;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+            font-size: 12px;
+            color: #777;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .caution {
+            color: #d9534f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/icons/logo-no-background.png" alt="DialogNetz Logo">
+            <h1>Invitation to Join DialogNetz</h1>
+        </div>
+        <div class="content">
+            <p>Hello,</p>
+
+            <p>You have been invited to join DialogNetz, the premier platform for seamless communication within your organization.</p>
+
+            <p>To get started, please click on the following link or use the OTP provided below:</p>
+
+            <p><a href="https://dailognetz.com/invite?code={{ invitation_code }}">Invitation Link</a></p>
+            <p>Your OTP: <strong>{{ otp }}</strong></p>
+
+            <p>We look forward to seeing you on DialogNetz!</p>
+        </div>
+        <div class="footer">
+            <p>Best regards,<br>The DialogNetz Team</p>
+            <p class="caution">Caution: This email is intended solely for the recipient. If you have received this email in error, please notify us immediately and delete it from your system.</p>
+            <p>Follow us on: <a href="https://twitter.com/DialogNetz">Twitter</a> | <a href="https://www.facebook.com/DialogNetz">Facebook</a> | <a href="https://www.linkedin.com/company/DialogNetz">LinkedIn</a></p>
+            <p>&copy; 2024 DialogNetz. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

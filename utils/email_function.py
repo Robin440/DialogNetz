@@ -1,9 +1,9 @@
-# views.py
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
-from core.settings import EMAIL_HOST_USER
-EMAIL_HOST_USER = EMAIL_HOST_USER
+from django.template.loader import render_to_string
+from django.conf import settings
 
+EMAIL_HOST_USER = settings.EMAIL_HOST_USER
 
 def send_invitation_email(request):
     """
@@ -17,7 +17,15 @@ def send_invitation_email(request):
     print(f"----------------------- {email} ----------------------------------------")
     try:
         subject = 'Invitation from DialogNetz'
-        message = f'''
+        from_email = EMAIL_HOST_USER
+        recipient_list = [email]
+
+        context = {
+            'invitation_code': invitation_code,
+            'otp': otp,
+        }
+        html_content = render_to_string('invitation.html', context)
+        text_content = f"""
 Hello,
 
 You have been invited to join DialogNetz, the premier platform for seamless communication within your organization.
@@ -31,13 +39,15 @@ We look forward to seeing you on DialogNetz!
 
 Best regards,
 The DialogNetz Team
-'''
-        from_email = EMAIL_HOST_USER
-        recipient_list = [email]
-        
-        send_mail(subject, message, from_email, recipient_list)
+"""
+
+        # Create the email
+        email_message = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
+        email_message.attach_alternative(html_content, "text/html")
+        email_message.send()
+
     except Exception as e:
-        print(f"__________________________________{e}________________________________________________")
-        return False
-    
-    return True
+        print(f"_____________________error_____________{e}________________________________________________")
+        return HttpResponse("Failed to send email", status=500)
+
+    return HttpResponse("Email sent successfully", status=200)
