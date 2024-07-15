@@ -110,9 +110,9 @@ class MemberCreateListAPI(APIView):
         print(f"user ------------------------------------------------ {user}")
 
         if isinstance(user, AnonymousUser):
-            return HTTP_400(
-                error={"user": ["Found as anonymousUser, login and try again."]}
-            )
+                return HTTP_400(
+                    error={"user": ["Found as anonymousUser, login and try again."]}
+                )
 
         member = get_member(user)
 
@@ -282,3 +282,28 @@ class MemberCreateListAPI(APIView):
         member_serializer.save()
 
         return HTTP_201(message={"member": ["Member has created successfully."]})
+
+
+class CurrentUserAPI(APIView):
+    """
+    API view to get current user's information
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET request to return the current user's information.
+
+        * Path params: NA.
+        * Body params: NA.
+        * Query params: NA.
+        * Return: A HTTP response of JSON format with the current user's information.
+        """
+        user = request.user
+        if not user:
+            return HTTP_400(error={"user": ["No authenticated user found."]})
+        
+        member = get_member(user)
+        
+        serializer = MemberSerializer(member)
+        return HTTP_200(data=serializer.data)

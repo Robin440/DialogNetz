@@ -39,6 +39,7 @@ def get_member(user):
     try:
         print(f'user ================================{user}')
         member_instance = Member.objects.get(user=user.id)
+        print(f"============================{member_instance.id}++++{member_instance.name}")
     except Member.DoesNotExist:
         return HTTP_400(error={"member":["Member is not found."]})
     return member_instance

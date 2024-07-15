@@ -8,7 +8,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -103,6 +103,43 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
+# from corsheaders.defaults import default_headers
+
+# CORS_ALLOW_HEADERS = list(default_headers) + [
+#     "X-organization-uuid",
+#     "X-ui-role",
+#     "HTTP_X_ANALYTICS_TOKEN",
+#     "HTTP-X-ANALYTICS-TOKEN",
+#     "HTTP-X-NEXT-JS-AUTH-TOKEN",
+#     "HTTP_X_NEXT_JS_AUTH_TOKEN",
+#     "HTTP_X_UI_ROLE",
+#     "HTTP-X-UI-ROLE",
+# ]
+
+
+# # Session settings for development
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+# ]
+
+# CORS_ALLOW_CREDENTIALS = True
+
+# # Session settings for development
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+# SESSION_COOKIE_SECURE = False  # Set to True if using HTTPS
+# SESSION_COOKIE_HTTPONLY = True  # Typically should be True for security
+# SESSION_COOKIE_SAMESITE = 'Lax'
+
+# # CSRF settings for development
+# CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+# CSRF_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+# CORS settings
 from corsheaders.defaults import default_headers
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
@@ -117,23 +154,28 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 
-# Session settings for development
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://stirred-monkfish-luckily.ngrok-free.app"
+]
 CORS_ALLOWED_ORIGINS = [
+    "https://stirred-monkfish-luckily.ngrok-free.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
+# CSRF settings
+CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+CSRF_COOKIE_HTTPONLY = False  # Typically should be True for security
+CSRF_COOKIE_SAMESITE = "Lax"
+
 # Session settings for development
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_SECURE = False  # Set to True if using HTTPS
 SESSION_COOKIE_HTTPONLY = True  # Typically should be True for security
-SESSION_COOKIE_SAMESITE = 'Lax'
-
-# CSRF settings for development
-CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = "Lax"

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from member.models import Member
+from member.models import Member,Message
 
 
 class MemberAdmin(admin.ModelAdmin):
@@ -33,3 +33,26 @@ class MemberAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Member,MemberAdmin)
+
+
+
+
+
+class MessageAdmin(admin.ModelAdmin):
+    """Class for customizing the admin interface for the Message model"""
+    list_display = ('id', 'sender_name', 'receiver_name', 'timestamp')
+    list_filter = ('timestamp',)
+    search_fields = ('sender_name', 'receiver_name')
+    ordering = ('-timestamp',)
+    readonly_fields = ('timestamp',)
+    
+
+    def sender_name(self, obj):
+        return obj.sender.name
+    sender_name.short_description = 'Sender Name'
+
+    def receiver_name(self, obj):
+        return obj.receiver.name
+    receiver_name.short_description = 'Receiver Name'
+
+admin.site.register(Message, MessageAdmin)

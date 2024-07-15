@@ -48,6 +48,51 @@ The DialogNetz Team
 
     except Exception as e:
         print(f"_____________________error_____________{e}________________________________________________")
-        return HttpResponse("Failed to send email", status=500)
+        return False
 
-    return HttpResponse("Email sent successfully", status=200)
+    return True
+
+
+
+def send_self_registration_verification(request):
+    """
+    Send a test email to the email address specified in the settings file.
+    """
+    otp=request.data.get('otp')
+    email = request.data.get("email")
+    invitation_code = request.data.get("invitation_code")
+    try:
+        subject = 'Welcome to DialogNetz! Complete Your Registration Today'
+        from_email = EMAIL_HOST_USER
+        recipient_list = [email]
+
+        context = {
+            'invitation_code': invitation_code,
+            'otp': otp,
+        }
+        html_content = render_to_string('self_registration.html', context)
+        text_content = f"""
+Hello,
+
+Welcome to DialogNetz, your go-to platform for seamless communication within your organization.
+
+To begin, please click on the link below or use the OTP provided to complete your registration:
+
+Registration Link: https://dailognetz.com/register?code={invitation_code}
+Your OTP: {otp}
+
+We're excited to have you join us on DialogNetz!
+
+Best regards,
+The DialogNetz Team
+
+"""
+        email_message = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
+        email_message.attach_alternative(html_content, "text/html")
+        email_message.send()
+    except Exception as e:
+        print(f"_____________________error_____________{e}________________________________________________")
+        return False
+    return True
+
+        

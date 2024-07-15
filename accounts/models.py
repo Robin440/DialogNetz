@@ -9,7 +9,7 @@ class User(AbstractUser):
     """User model for handle user data"""
     username = models.CharField(unique=True,max_length=20)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
+    password = models.CharField(max_length=100,null=True,blank=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20,blank=True,null=True)
     phone_number = models.CharField(max_length=15,blank=True,null=True)
