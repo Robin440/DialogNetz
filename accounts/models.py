@@ -20,7 +20,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_used_org =models.ForeignKey("organization.Organization",on_delete=models.CASCADE,related_name="user",blank=True,null=True)
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ['email']
     def __str__(self):
         return self.username

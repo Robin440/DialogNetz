@@ -23,6 +23,7 @@ from utils.utils import generate_otp, generate_unique_code
 from organization.models import *
 from member.serializers import MemberValidationSerializer
 from utils.email_function import send_self_registration_verification
+from utils.utils import get_member
 
 
 class LoginAPI(APIView):
@@ -246,6 +247,8 @@ class OTPVerifyMemberAPI(APIView):
 
         if valid_otp == otp:
             member_instance.is_invited = False
+            member_instance.otp = None
+            member_instance.invitation_code = None
             member_instance.save()
             return HTTP_200({"message": "OTP verified successfully"})
 
@@ -288,7 +291,7 @@ class RegisterAPI(APIView):
             return HTTP_400(error={"email": ["Invalid email,expected a string."]})
 
         email = User.objects.filter(email=email).exists()
-       
+
         if email is True:
             return HTTP_400(error={"email": ["Email already exists."]})
 
@@ -302,7 +305,7 @@ class RegisterAPI(APIView):
         if not isinstance(username, str):
             return HTTP_400(error={"username": ["Invalid username,expected a string."]})
         email = request.data.get("email")
-        # username = 
+        # username =
 
         if not username.isalnum():
             return HTTP_400(
@@ -358,5 +361,67 @@ class RegisterAPI(APIView):
         )
 
 
+class SetPasswordAPI(APIView):
+    """
+    Set password for user
+    """
 
-#robinraphael440@gmail.com
+    def post(self, request, *args, **kwargs):
+        """
+        # Handle post request to set password.
+
+        * Path params : NA.
+        * Query params : NA.
+        * Body params : email address of the user.
+        * Response : 200 - Success, 400 - Failure.
+
+        """
+
+        # accessing data email from request data
+        email = request.data.get("email", None)
+        if not email:
+            return HTTP_400(error={"email": ["This field is required."]})
+        # checking if email is already registered
+        user_instance = User.objects.filter(email=email).first()
+        if not user_instance:
+            return HTTP_400(error={"email": ["User does not exist."]})
+        # checking if user is already verified
+        member = get_member(user_instance)
+        if member.is_active is False:
+            return HTTP_400(error={"email": ["User is not verified."]})
+
+        password = request.data.get("password")
+        if not password:
+            return HTTP_400(error={"password": ["This field is required."]})
+        # checking if password is valid
+        if len(password) < 6 and password.isalnum():
+            return HTTP_400(
+                error={
+                    "password": [
+                        "Password must be at least 6 characters long or Password must contain at least one number."
+                    ]
+                }
+            )
+        confirm_password = request.data.get("confirm_password")
+        if not confirm_password:
+            return HTTP_400(error={"confirm_password": ["This field is required."]})
+        if password != confirm_password:
+            return HTTP_400(error={"confirm_password": ["Password does not match."]})
+        try:
+            # setting password
+            user_instance.set_password(password)
+            # saving user
+            user_instance.save()
+            return HTTP_200(
+                message={
+                    "message": "Password updated successfully.",}
+
+            )
+        except Exception as e:
+            return HTTP_400(error={"password": [str(e)]})
+        
+            
+        
+
+
+# robinraphael440@gmail.com

@@ -7,7 +7,7 @@ from member.models import Member,Message
 class MemberAdmin(admin.ModelAdmin):
     """class for member"""
     list_display = ('id', 'name','created_at',
-                    'updated_at')
+                    'updated_at',"is_active")
     list_filter = ('created_at', 'updated_at')
     search_fields = ('name', 'email', 'phone')
     ordering = ('-created_at',)
